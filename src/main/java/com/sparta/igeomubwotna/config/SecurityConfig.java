@@ -24,8 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
-    private final UserDetailsServiceImpl userDetailsService;
-    ;  //사용자 정보를 로드하는 서비스
+    private final UserDetailsServiceImpl userDetailsService; //사용자 정보를 로드하는 서비스
     private final AuthenticationConfiguration authenticationConfiguration; //인증 구성을 위한 클래스.
     private final UserRepository userRepository;
 

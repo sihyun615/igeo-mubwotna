@@ -1,11 +1,14 @@
 package com.sparta.igeomubwotna.dto;
 
 import com.sparta.igeomubwotna.entity.Comment;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@AllArgsConstructor
 public class CommentResponseDto {
     private long id;
     private String content;

@@ -2,13 +2,17 @@ package com.sparta.igeomubwotna.entity;
 
 import com.sparta.igeomubwotna.dto.RecipeRequestDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "recipe")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Recipe extends Timestamped {
 
 

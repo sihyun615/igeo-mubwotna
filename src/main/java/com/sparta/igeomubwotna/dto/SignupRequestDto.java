@@ -4,10 +4,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
+@AllArgsConstructor
 public class SignupRequestDto {
     @Size(min = 10, max = 20, message = "사용자 ID는 최소 10글자 이상, 20글자 이하이어야 합니다.")
     @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "사용자 ID는 알파벳 대소문자, 숫자로만 구성되어야 합니다.")
