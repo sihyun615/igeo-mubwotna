@@ -53,10 +53,16 @@ class UserServiceIntegrationTest {
 	@Test
 	@DisplayName("회원가입 테스트")
 	void testSignupSuccess() {
-		SignupRequestDto requestDto = new SignupRequestDto("123syihyun123", "Qkrtlgus11!", "sihyun", "111lch_n9@df.com", "Hi");
+		SignupRequestDto requestDto = mock(SignupRequestDto.class);
 		BindingResult bindingResult = mock(BindingResult.class);
 		Response response = new Response(HttpStatus.OK.value(), "회원가입에 성공하였습니다.");
 		ResponseEntity<Response> responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+
+		given(requestDto.getUserId()).willReturn("123syihyun123");
+		given(requestDto.getPassword()).willReturn("Qkrtlgus11!");
+		given(requestDto.getName()).willReturn("sihyun");
+		given(requestDto.getEmail()).willReturn("111lch_n9@df.com");
+		given(requestDto.getDescription()).willReturn("Hi");
 
 		given(userRepository.findByUserId(anyString())).willReturn(Optional.empty());
 		given(userRepository.findByEmail(anyString())).willReturn(Optional.empty());
@@ -73,10 +79,12 @@ class UserServiceIntegrationTest {
 	@Test
 	@DisplayName("회원가입 실패: 중복된 아이디")
 	void testSignupFailureDuplicateUserId() {
-		SignupRequestDto requestDto = new SignupRequestDto("123syihyun123", "Qkrtlgus11!", "sihyun", "111lch_n9@df.com", "Hi");
+		SignupRequestDto requestDto = mock(SignupRequestDto.class);
 		BindingResult bindingResult = mock(BindingResult.class);
 		Response response = new Response(HttpStatus.BAD_REQUEST.value(), "중복된 아이디가 존재합니다.");
 		ResponseEntity<Response> responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
+		given(requestDto.getUserId()).willReturn("123syihyun123");
 
 		given(userRepository.findByUserId(anyString())).willReturn(Optional.of(user));
 
@@ -90,10 +98,13 @@ class UserServiceIntegrationTest {
 	@Test
 	@DisplayName("회원가입 실패: 중복된 이메일")
 	void testSignupFailureDuplicateEmail() {
-		SignupRequestDto requestDto = new SignupRequestDto("123syihyun123", "Qkrtlgus11!", "sihyun", "111lch_n9@df.com", "Hi");
+		SignupRequestDto requestDto = mock(SignupRequestDto.class);
 		BindingResult bindingResult = mock(BindingResult.class);
 		Response response = new Response(HttpStatus.BAD_REQUEST.value(), "중복된 이메일이 존재합니다.");
 		ResponseEntity<Response> responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
+		given(requestDto.getUserId()).willReturn("123syihyun123");
+		given(requestDto.getEmail()).willReturn("111lch_n9@df.com");
 
 		given(userRepository.findByUserId(anyString())).willReturn(Optional.empty());
 		given(userRepository.findByEmail(anyString())).willReturn(Optional.of(user));
@@ -123,9 +134,14 @@ class UserServiceIntegrationTest {
 	@DisplayName("사용자 프로필 수정 테스트")
 	void testUpdateUserProfileSuccess() {
 		Long userId = 1L;
-		UserUpdateRequestDto requestDto = new UserUpdateRequestDto("Updated Name", "Updated Description", "Qkrtlgus11!", "Qqkrtlgus11!");
+		UserUpdateRequestDto requestDto = mock(UserUpdateRequestDto.class);
 		Response response = new Response(HttpStatus.OK.value(), "프로필 정보를 성공적으로 수정하였습니다.");
 		ResponseEntity<Response> responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+
+		given(requestDto.getName()).willReturn("Updated Name");
+		given(requestDto.getDescription()).willReturn("Updated Description");
+		given(requestDto.getCurrentPassword()).willReturn("Qkrtlgus11!");
+		given(requestDto.getNewPassword()).willReturn("Qqkrtlgus11!");
 
 		given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
 		given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
@@ -143,9 +159,12 @@ class UserServiceIntegrationTest {
 	@DisplayName("사용자 프로필 수정 실패: 현재 비밀번호 불일치")
 	void testUpdateUserProfileFailure() {
 		Long userId = 1L;
-		UserUpdateRequestDto requestDto = new UserUpdateRequestDto("Updated Name", "Updated Description", "Qkrtlgu11!", "!Qkrtlgus11!");
+		UserUpdateRequestDto requestDto = mock(UserUpdateRequestDto.class);
 		Response response = new Response(HttpStatus.BAD_REQUEST.value(), "입력한 현재 비밀번호가 일치하지 않습니다.");
 		ResponseEntity<Response> responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
+		given(requestDto.getCurrentPassword()).willReturn("Qkrtlgus11!");
+		given(requestDto.getNewPassword()).willReturn("Qqkrdtlgus11!");
 
 		given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
 		given(passwordEncoder.matches(anyString(), anyString())).willReturn(false);
@@ -177,10 +196,14 @@ class UserServiceIntegrationTest {
 	@DisplayName("사용자 탈퇴 테스트")
 	void testWithdrawUser() {
 		Long userId = 1L;
-		PasswordDto passwordDto = new PasswordDto("Qkrtlgus11!");
+		PasswordDto passwordDto = mock(PasswordDto.class);
 		Response response = new Response(HttpStatus.OK.value(), "회원 탈퇴가 성공적으로 완료되었습니다.");
 		ResponseEntity<Response> responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
 
+		given(passwordDto.getPassword()).willReturn("Qkrtlgus11!");
+
+		// 모의된 User 객체의 비밀번호 설정
+		user.setPassword("Qkrtlgus11!");
 		given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
 		given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
 
@@ -195,9 +218,11 @@ class UserServiceIntegrationTest {
 	@DisplayName("사용자 탈퇴 실패: 비밀번호 불일치")
 	void testWithdrawUserFailureIncorrectPassword() {
 		Long userId = 1L;
-		PasswordDto passwordDto = new PasswordDto("IncorrectPassword");
+		PasswordDto passwordDto = mock(PasswordDto.class);
 		Response response = new Response(HttpStatus.BAD_REQUEST.value(), "비밀번호가 일치하지 않습니다.");
 		ResponseEntity<Response> responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
+		given(passwordDto.getPassword()).willReturn("IncorrectPassword");
 
 		given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
 		given(passwordEncoder.matches(anyString(), anyString())).willReturn(false);
