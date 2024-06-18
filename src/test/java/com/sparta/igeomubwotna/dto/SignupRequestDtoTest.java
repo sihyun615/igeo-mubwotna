@@ -74,6 +74,20 @@ class SignupRequestDtoTest {
 		));
 	}
 
+	@Test
+	@DisplayName("비밀번호가 Null인 경우 테스트")
+	void testNullPassword() {
+		SignupRequestDto invalidDto = new SignupRequestDto("123syihyun123", null, "sihyun", "111lch_n9@df.com", "description test");
+		// Validator를 사용하여 DTO를 검증하고, 결과를 violations에 저장
+		Set<ConstraintViolation<SignupRequestDto>> violations = validator.validate(invalidDto);
+
+		assertFalse(violations.isEmpty());  // violations이 비어있지 않음을 확인하여, DTO에 유효성 오류가 있음을 검증
+		assertTrue(violations.stream().anyMatch(violation ->
+			"password".equals(violation.getPropertyPath().toString()) &&
+				"password는 null이 될 수 없습니다.".equals(violation.getMessage())
+		));
+	}
+
 
 	@Test
 	@DisplayName("길이를 충족하지 못하는 비밀번호 테스트")
