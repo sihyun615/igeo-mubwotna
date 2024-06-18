@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Locale;
 import java.util.Set;
 
 import jakarta.validation.ConstraintViolation;
@@ -20,6 +21,7 @@ class SignupRequestDtoTest {
 
 	@BeforeEach
 	void setUp() {
+		Locale.setDefault(Locale.KOREAN);
 		// ValidatorFactory를 통해 Validator 객체를 생성
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();

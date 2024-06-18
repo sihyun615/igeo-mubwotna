@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Locale;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,6 +21,7 @@ public class UserUpdateRequestDtoTest {
 
 	@BeforeEach
 	void setUp() {
+		Locale.setDefault(Locale.KOREAN);
 		// ValidatorFactory를 생성하고 이를 통해 Validator 인스턴스를 초기화함
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
